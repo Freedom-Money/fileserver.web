@@ -1,59 +1,65 @@
 <template>
-    <h3>文件管理</h3>
+    <h2>文件管理</h2>
+    <p>{{ msg }}</p>
+    <hr />
     <div>
         <a-select show-search placeholder="Select a person" option-filter-prop="children" style="width: 200px"
             :filter-option="filterOption" @focus="handleFocus" @blur="handleBlur" @change="handleChange">
-            <a-select-option v-for="(value, index) in options" :value="value.id">{{value.name}}</a-select-option>
+            <a-select-option v-for="(value, index) in options" :value="value.id">{{ value.name }}</a-select-option>
         </a-select>
+        <a-button type="primary" @click="searchHandler"> 查询</a-button>
+        <a-button type="danger" @click="deleteHandler"> 删除</a-button>
     </div>
 
     <div>
         <a-table :row-selection="rowSelection" :columns="columns" :data-source="data" />
     </div>
 </template>
+
 <script>
-const columns = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-    },
-];
-
-const data = [];
-for (let i = 0; i < 5; i++) {
-    data.push({
-        key: i,
-        name: `Edward King ${i}`,
-        age: 32,
-        address: `London, Park Lane no. ${i}`,
-    });
-}
-
+import request from "../utils/http"
 export default {
     data() {
         return {
-            data,
-            columns,
+            data: [],
+            columns: [],
             selectedRowKeys: [], // Check here to configure the default column
-            options: [
-                {
-                    id: "1",
-                    name:"author1"
-                },
-                {
-                    id: "2",
-                    name:"author2"
-                }
-            ]
+            options: [],
+            msg: ""
         };
+    },
+    mounted() {
+        this.columns = [
+            {
+                title: 'Name',
+                dataIndex: 'name',
+            },
+            {
+                title: 'Age',
+                dataIndex: 'age',
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+            },
+        ];
+        this.options = [{
+            id: "1",
+            name: "author1"
+        }, {
+            id: "2",
+            name: "author2"
+        }],
+            request({
+                url: '/v1/user/get?account=aegeanus1',
+                method: 'get'
+            }).then((res) => {
+                alert('请求成功!');
+                this.msg = res.data
+            }).catch(function (error) {
+                console.log(error);
+                alert("请求失败", error)
+            });
     },
     computed: {
         rowSelection() {
@@ -121,6 +127,13 @@ export default {
             return (
                 option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
             );
+        },
+        searchHandler() {
+            this.data.push({ key: 1, name: `Edward King 1`, age: 32, address: `London, Park Lane no.` });
+            this.data.push({ key: 2, name: `Edward King 2`, age: 32, address: `London, Park Lane no.` });
+        },
+        deleteHandler() {
+            this.data.pop()
         }
     },
 };
