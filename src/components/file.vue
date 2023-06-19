@@ -3,12 +3,17 @@
     <p>{{ msg }}</p>
     <hr />
     <div>
+        <span>&nbsp;&nbsp;</span>
         <a-select show-search placeholder="Select a person" option-filter-prop="children" style="width: 200px"
             :filter-option="filterOption" @focus="handleFocus" @blur="handleBlur" @change="handleChange">
             <a-select-option v-for="(value, index) in options" :value="value.id">{{ value.name }}</a-select-option>
-        </a-select>
-        <a-button type="primary" @click="searchHandler"> 查询</a-button>
-        <a-button type="danger" @click="deleteHandler"> 删除</a-button>
+        </a-select>     
+        <span>&nbsp;&nbsp;&nbsp;</span>
+        <a-button type="primary" @click="searchHandler">查询作者文件</a-button>
+        <span>&nbsp;&nbsp;</span>
+        <a-button type="danger" @click="deleteHandler">删除选中文件</a-button>
+        <span>&nbsp;&nbsp;</span>
+        <a-button type="danger">删除选中作者</a-button>
     </div>
 
     <div>
