@@ -1,47 +1,58 @@
 <template>
-  <div>
-    <a-button type="primary" @click="showModal">
-      Open Modal with customized footer
-    </a-button>
-    <a-modal v-model="visible" title="Title" on-ok="handleOk">
-      <template slot="footer">
-        <a-button key="back" @click="handleCancel">
-          Return
-        </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="handleOk">
-          Submit
-        </a-button>
-      </template>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </a-modal>
-  </div>
+  <a-carousel arrows>
+    <template #prevArrow>
+      <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+        <left-circle-outlined />
+      </div>
+    </template>
+    <template #nextArrow>
+      <div class="custom-slick-arrow" style="right: 10px">
+        <right-circle-outlined />
+      </div>
+    </template>
+    <div><h3>1</h3></div>
+    <div><h3>2</h3></div>
+    <div><h3>3</h3></div>
+    <div><h3>4</h3></div>
+  </a-carousel>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      loading: false,
-      visible: false,
-    };
+<script lang="ts">
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+import { defineComponent } from 'vue';
+export default defineComponent({
+  components: {
+    LeftCircleOutlined,
+    RightCircleOutlined,
   },
-  methods: {
-    showModal() {
-      this.visible = true;
-    },
-    handleOk(e) {
-      this.loading = true;
-      setTimeout(() => {
-        this.visible = false;
-        this.loading = false;
-      }, 3000);
-    },
-    handleCancel(e) {
-      this.visible = false;
-    },
-  },
-};
+});
 </script>
+<style scoped>
+/* For demo */
+.ant-carousel :deep(.slick-slide) {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
+  z-index: 1;
+}
+.ant-carousel :deep(.custom-slick-arrow:before) {
+  display: none;
+}
+.ant-carousel :deep(.custom-slick-arrow:hover) {
+  opacity: 0.5;
+}
+
+.ant-carousel :deep(.slick-slide h3) {
+  color: #fff;
+}
+</style>
