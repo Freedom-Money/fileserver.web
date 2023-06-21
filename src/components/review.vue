@@ -1,16 +1,17 @@
 <template>
     <div class="review-page">
         <div class="review-header" @click="updateInfo">
-            <div class="title">视频标题</div>
-            <a-tag v-for="i in 8" color="pink" v-text="'text' + i"></a-tag>
+            <div class="title">{{currentInfo.Title}}</div>
+            <a-tag v-for="(tag, index) in currentInfo.Tags" color="pink" v-text="tag.Name"></a-tag>
             <a-button class="change-btn" type="primary" @click.stop="changeFiles">换一批</a-button>
         </div>
 
-        <swiper :pagination="{ type: 'fraction' }" :navigation="true" :modules="modules" @navigation-next="next" @slideChange="getCurrentSlide">
+        <swiper :pagination="{ type: 'fraction' }" :navigation="true" :modules="modules" @navigation-next="next"
+            @slideChange="getCurrentSlide">
             class="review-content">
             <swiper-slide v-for="(video, index) in ctnList" :key="index">
-                <video ref="videoElement" class="review-video" style="margin: auto;" x5-video-player-type="h5" x-webkit-airplay="true"
-                    webkit-playsinline="true" loop autoplay :key="index"
+                <video ref="videoElement" class="review-video" style="margin: auto;" x5-video-player-type="h5"
+                    x-webkit-airplay="true" webkit-playsinline="true" loop autoplay :key="index"
                     @click="e => play(e.target, index)">
                     <source :src="video.Src" type="video/mp4">
                 </video>
@@ -24,8 +25,13 @@
         </div>
     </div>
 
-    <a-modal v-model:visible="modalVisible" title="Title" @ok="handleOk">
-        <fileinfo :info="currentInfo"></fileinfo>
+    <a-modal v-model:visible="modalVisible" title="修改信息">
+        <template v-slot:default>
+            <fileinfo :info="currentInfo" :defaultSelectedTagNames="defaultSelectedTagNames"></fileinfo>
+        </template>
+        <template v-slot:footer>
+        </template>
+
     </a-modal>
 </template>
 
@@ -44,20 +50,11 @@ export default {
     data() {
         return {
             modalVisible: false,
-            ctnList: [{
-                Id: 1,
-                Src: "http://localhost:9999/api/raw/1.mp4",
-                Tag: {
-                    Id : 1,
-                    Name: "tag1"
-                }
-            }, {
-                Id: 2,
-                Src: "http://localhost:9999/api/raw/2.mp4"
-            }],
+            ctnList: [],
             currentInfo: null,
             showfileinfo: false,
-            currentIndex : 0
+            currentIndex: 0,
+            defaultSelectedTagNames: []
         }
     },
     components: {
@@ -71,7 +68,7 @@ export default {
         };
     },
     methods: {
-        getCurrentSlide(e) {  
+        getCurrentSlide(e) {
             this.currentInfo = this.ctnList[e.activeIndex]
             console.log("currentInfo:", this.currentInfo)
         },
@@ -84,9 +81,6 @@ export default {
         },
         updateInfo() {
             this.modalVisible = true;
-        },
-        handleOk() {
-            this.modalVisible = false;
         },
         getReviewFiles() {
             /*api.apiGetReviewFiles().then((res) => {
@@ -103,20 +97,54 @@ export default {
                     this.ctnList.push(ctn)
                 }
             })*/
+            this.ctnList = [{
+                Id: 1,
+                Src: "http://localhost:9999/api/raw/1.mp4",
+                Title: "测试1",
+                Tags: [{
+                    Id: 1,
+                    Name: "tag1"
+                }, {
+                    Id: 3,
+                    Name: "标签1"
+                }]
+            }, {
+                Id: 2,
+                Src: "http://localhost:9999/api/raw/2.mp4",
+                Title: "测试2",
+                Tags: [{
+                    Id: 2,
+                    Name: "标签2"
+                }, {
+                    Id: 4,
+                    Name: "tag4"
+                }]
+            }]
         },
-        next(e) {           
+        next(e) {
         },
         play(ele, index) {
             if (ele.paused)
                 ele.play();
             else
                 ele.pause();
-        },
+        }
     },
-    mounted() {
+    beforeMount() {
         this.getReviewFiles()
         this.currentInfo = this.ctnList[0]
-    }
+    },
+    watch: {
+        modalVisible(newValue) {
+            if (newValue) {
+                this.defaultSelectedTagNames = []
+                for (var index in this.currentInfo.Tags) {
+                    var tag = this.currentInfo.Tags[index]
+                    this.defaultSelectedTagNames.push(tag.Name)
+                }
+            }
+        }
+    },
 };
 </script>
 
@@ -127,7 +155,7 @@ export default {
     /* display: flex; */
     /* flex-direction: column; */
     position: relative;
-    max-width: 1024px; /* 设置容器的最大宽度 */
+    max-width: 1024px;
 }
 
 .review-header {
