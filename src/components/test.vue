@@ -1,30 +1,32 @@
 <template>
-  <h2>{{ options.length }} Items</h2>
-  <a-select
-    v-model:value="value"
-    mode="multiple"
-    style="width: 100%"
-    placeholder="Please select"
-    :options="options"
-  />
+  <div>
+    <a-button type="primary" @click="showModal">Open Modal</a-button>
+    <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-modal>
+  </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
-const options: { value: string; disabled: boolean }[] = [];
-for (let i = 0; i < 100000; i++) {
-  const value = `${i.toString(36)}${i}`;
-  options.push({
-    value,
-    disabled: i === 10,
-  });
-}
+import { defineComponent, ref } from 'vue';
 export default defineComponent({
   setup() {
-    const state = reactive({
-      options,
-      value: ['a10', 'c12'],
-    });
-    return state;
+    const visible = ref<boolean>(false);
+
+    const showModal = () => {
+      visible.value = true;
+    };
+
+    const handleOk = (e: MouseEvent) => {
+      console.log(e);
+      visible.value = false;
+    };
+    return {
+      visible,
+      showModal,
+      handleOk,
+    };
   },
 });
 </script>

@@ -1,38 +1,27 @@
 import axios from "axios";
-import qs from "qs";
 
-axios.defaults.baseURL = 'http://localhost:8800'
-
-//设置超时
+axios.defaults.baseURL = 'http://localhost:8800';
 axios.defaults.timeout = 15000;
-
-axios.interceptors.request.use(
-    config => {
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    }
-);
 
 axios.interceptors.response.use(
     response => {
-        if (response.status == 200) {
-            return Promise.resolve(response);
+        if (response.status === 200) {
+            return response.data;
         } else {
             return Promise.reject(response);
         }
     },
     error => {
-
         alert(JSON.stringify(error), '请求异常', {
             confirmButtonText: '确定',
             callback: (action) => {
-                console.log(action)
+                console.log(action);
             }
         });
+        return Promise.reject(error);
     }
 );
+
 export default {
     /**
      * @param {String} url 
@@ -40,37 +29,25 @@ export default {
      * @returns Promise
      */
     post(url, data) {
-        return new Promise((resolve, reject) => {
-            axios({
-                    method: 'post',
-                    url,
-                    data: JSON.stringify(data),
-                })
-                .then(res => {
-                    console.log(res)
-                    resolve(res.data)
-                })
-                .catch(err => {
-                    reject(err)
-                });
-        })
+        return axios.post(url, data)
+            .then(response => {
+                console.log(response);
+                return response;
+            })
+            .catch(error => {
+                throw error;
+            });
     },
 
-    get(url, data) {
-        return new Promise((resolve, reject) => {
-            axios({
-                    method: 'get',
-                    url,
-                    params: data,
-                })
-                .then(res => {
-                    console.log(res)
-                    resolve(res.data)
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    get(url, params) {
+        return axios.get(url, { params })
+            .then(response => {
+                console.log(response);
+                return response;
+            })
+            .catch(error => {
+                throw error;
+            });
     },
 
     axios
