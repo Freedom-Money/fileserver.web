@@ -109,7 +109,6 @@ export default {
                 };
                 const res = await api.apiUpdateReviewFlag(requestData);
                 console.log("审核结果：", res)
-                alert("审核通过")
                 if (flag === 1) {
                     this.currentInfo.Flag = "合格"
                 } else if (flag === 2) {
@@ -126,7 +125,6 @@ export default {
                 };
                 const res = await api.apiDeleteFile(requestData);
                 console.log("删除结果：", res)
-                alert("删除成功")
                 this.currentInfo.Flag = "已删除"
             } catch (error) {
                 console.error(error);

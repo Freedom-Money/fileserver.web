@@ -69,9 +69,7 @@ export default {
                 };
                 const res = await api.apiUpdateFileInfo(requestData);
                 console.log("更新文件信息结果：", res)
-                alert("更新成功") 
-                this.$emit("close", requestData.Title, requestData.TagNames)   
-                            
+                this.$emit("close", requestData.Title, requestData.TagNames)                      
             } catch (error) {
                 console.error(error);
             }
