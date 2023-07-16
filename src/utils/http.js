@@ -1,8 +1,17 @@
 import axios from "axios";
+import JSONBIG from "json-bigint"
 
 axios.defaults.baseURL = 'http://localhost:8800';
 axios.defaults.timeout = 15000;
-
+axios.defaults.transformResponse = [
+    function (data) {
+      const json = JSONBIG({
+        storeAsString: true
+      })
+      const res = json.parse(data)
+      return res
+    }
+  ]
 axios.interceptors.response.use(
     response => {
         if (response.status === 200) {

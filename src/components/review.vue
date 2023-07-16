@@ -3,8 +3,8 @@
         <div class="review-header" @click="updateInfo">
             <div class="flag">{{ currentInfo ? currentInfo.Flag : '' }}</div>
             <div class="title">{{ currentInfo ? currentInfo.Title : '' }}</div>
-            <a-tag v-for="(tagName, index) in (defaultSelectedTagNames ? defaultSelectedTagNames : [])" color="pink" :key="index"
-                v-text="tagName"></a-tag>
+            <a-tag v-for="(tagName, index) in (defaultSelectedTagNames ? defaultSelectedTagNames : [])" color="pink"
+                :key="index" v-text="tagName"></a-tag>
             <a-button class="change-btn" type="primary" @click.stop="changeFiles">换一批</a-button>
         </div>
 
@@ -12,7 +12,7 @@
             @slideChange="getCurrentSlide" class="review-content">
             <swiper-slide v-for="(video, index) in ctnList" :key="index">
                 <video ref="videoElements" class="review-video" style="margin: auto;" x5-video-player-type="h5"
-                    x-webkit-airplay="true" webkit-playsinline="true" loop autoplay @click="play(video, index)">
+                    x-webkit-airplay="true" webkit-playsinline="true" loop @click="play(video, index)">
                     <source :src="video.Src" type="video/mp4">
                 </video>
             </swiper-slide>
@@ -53,7 +53,8 @@ export default {
             currentInfo: null,
             defaultSelectedTagNames: [],
             tags: [],
-            activeIndex: 0
+            activeIndex: 0,
+            videoElement: [] // 视频元素数组
         }
     },
     components: {
@@ -71,6 +72,7 @@ export default {
         this.currentInfo = this.ctnList[0];
         this.defaultSelectedTagNames = this.currentInfo ? this.currentInfo.Tags.map(tag => tag.Name) : [];
         await this.getTags();
+        this.videoElement = document.getElementsByTagName('video')
     },
     methods: {
         async getReviewFiles() {
@@ -141,6 +143,8 @@ export default {
             this.currentInfo = this.ctnList[this.activeIndex];
             this.defaultSelectedTagNames = this.currentInfo ? this.currentInfo.Tags.map(tag => tag.Name) : [];
             console.log("currentInfo:", this.currentInfo);
+
+            this.play(this.index)
         },
         openPictureInPicture(index) {
             const video = document.getElementById("video" + index);
@@ -155,11 +159,15 @@ export default {
         next(e) {
         },
         play(video, index) {
-            const videoElement = this.$refs.videoElements[index];
-            if (videoElement.paused) {
-                videoElement.play();
-            } else {
-                videoElement.pause();
+            const videoElement = this.videoElement
+            if (videoElement && videoElement.length > 0) {
+                for (let i = 0; i < videoElement.length; i++) {
+                    if (i === index) {
+                        this.videoElement[i].play()
+                    } else {
+                        this.videoElement[i].pause()
+                    }
+                }
             }
         }
     }
