@@ -83,7 +83,7 @@ export default {
                     Id: info.Id,
                     Title: info.Title,
                     Type: info.Type,
-                    Src: `http://localhost:9999/api/raw/${info.Id}.mp4`,
+                    Src: this.$filebrowserUrl + `/api/raw/${info.Id}.mp4`,
                     Tags: info.Tags,
                     Flag: "待审核"
                 }));

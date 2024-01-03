@@ -1,7 +1,6 @@
 import axios from "axios";
 import JSONBIG from "json-bigint"
 
-axios.defaults.baseURL = 'http://localhost:8800';
 axios.defaults.timeout = 15000;
 axios.defaults.transformResponse = [
     function (data) {
