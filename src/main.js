@@ -8,9 +8,9 @@ import './assets/main.css';
 const app = createApp(App);
 
 // 使用 VUE_APP_ 前缀
-app.config.globalProperties.$freedomFileServerUrl = process.env.VUE_APP_FREEDOM_FILE_SERVER_URL;
+app.config.globalProperties.$freedomFileServerUrl = frontConfig.freedomFileServerUrl;
 console.log('freedomFileServerUrl====', app.config.globalProperties.$freedomFileServerUrl);
-app.config.globalProperties.$filebrowserUrl = process.env.VUE_APP_FILEBROWSER_URL;
+app.config.globalProperties.$filebrowserUrl =  frontConfig.filebrowserUrl;
 console.log('filebrowserUrl====', app.config.globalProperties.$filebrowserUrl);
 
 app.config.globalProperties.$axios = http;
